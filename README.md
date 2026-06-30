@@ -13,7 +13,7 @@ _How does revenue trend over time (monthly, weekly, cumulative)?
   
 Author: [Trần Quốc Hưng]  
 Date: 2025/12/25 
-Tools Used: SQL/ Python  
+Tools Used: SQL  
 
 ---
 
@@ -32,18 +32,24 @@ Tools Used: SQL/ Python
 This project uses SQL in BigQuery to analyze Google Analytics e‑commerce data in order to:
 
 ✔️ Identify the top‑performing products and categories by revenue and quantity.
+
 ✔️ Evaluate sales performance across countries, regions, traffic sources, and devices.
+
 ✔️ Understand customer behavior from product views → add to cart → purchase.
+
 ✔️ Track revenue trends over time (monthly, weekly, cumulative).
+
 ✔️ Provide actionable insights for the business team to optimize marketing channels and store operations.
 ## Main Business Question:  
 How can we measure and improve store performance by analyzing product sales, customer behavior, and revenue trends across different dimensions (product, geography, traffic source, device, time)?
 ### 👤 Who is this project for?  
 
 Mention who might benefit from this project 
-✔️ Business Intelligence teams who need to monitor store performance and generate insights from e‑commerce data.
-✔️ Marketing managers who want to evaluate which traffic sources and campaigns drive the most revenue.
-✔️ Sales managers who need to track product performance and customer purchase behavior.
+
+✔️ Business Intelligence teams .
+
+✔️ StackHolder
+
 ✔️ Executives & decision‑makers who require clear dashboards to oversee daily operations and long‑term trends.
 
 
@@ -109,13 +115,20 @@ Aggregate revenue by product name.
 Order descending and limit to top 10.
 ## 💻 Query / Code
 SELECT
-  p.v2ProductName AS product_name,
+  p.v2ProductName AS product_name, 
+  
   SUM(p.productRevenue) / 1000000 AS total_revenue
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+
      UNNEST(t.hits) AS h,
+     
      UNNEST(h.product) AS p
+     
 WHERE p.productRevenue IS NOT NULL
+
 GROUP BY product_name
+
 ORDER BY total_revenue DESC;
 
 ### Project Results:
@@ -148,13 +161,21 @@ Order results by revenue in descending order.
 ## 💻 Query / Code
 SELECT
   p.v2ProductCategory AS product_category,
+  
   SUM(p.productRevenue) / 1000000 AS total_revenue
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+
      UNNEST(t.hits) AS h,
+     
      UNNEST(h.product) AS p
+     
 WHERE totals.transactions >= 1
+
   AND p.productRevenue IS NOT NULL
+  
 GROUP BY product_category
+
 ORDER BY total_revenue DESC;
 
 
@@ -198,13 +219,22 @@ Order results by revenue in descending order
 ## 💻 Query / Code
 SELECT
   t.geoNetwork.country AS country,
+  
   SUM(p.productRevenue) / 1000000 AS total_revenue
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+
      UNNEST(t.hits) AS h,
+     
      UNNEST(h.product) AS p
+     
 WHERE totals.transactions >= 1
+
+
   AND p.productRevenue IS NOT NULL
+  
 GROUP BY country
+
 ORDER BY total_revenue DESC;
 
 
@@ -277,14 +307,23 @@ Order results by revenue in descending order
 ## 💻 Query / Code
 SELECT
   t.trafficSource.medium AS traffic_medium,
+  
   SUM(p.productRevenue) / 1000000 AS total_revenue
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+
      UNNEST(t.hits) AS h,
+     
      UNNEST(h.product) AS p
+     
 WHERE totals.transactions >= 1
+
   AND p.productRevenue IS NOT NULL
+  
 GROUP BY traffic_medium
+
 ORDER BY total_revenue DESC;
+
 select *  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
 
 ### Project Results:
@@ -321,12 +360,19 @@ Order results by revenue in descending order
 ## 💻 Query / Code
 SELECT
   p.v2ProductName AS product_name,
+  
   SUM(p.productQuantity) AS total_quantity
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+
      UNNEST(t.hits) AS h,
+     
      UNNEST(h.product) AS p
+     
 WHERE  p.productRevenue IS NOT NULL
+
 GROUP BY product_name
+
 ORDER BY total_quantity DESC;
 
 ### Project Results:
@@ -406,15 +452,25 @@ Order results by revenue in descending order
 ## 💻 Query / Code
 SELECT
   EXTRACT(YEAR FROM PARSE_DATE('%Y%m%d', t.date)) AS year,
+  
   EXTRACT(MONTH FROM PARSE_DATE('%Y%m%d', t.date)) AS month,
+  
   SUM(p.productRevenue) / 1000000 AS total_revenue
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+
      UNNEST(t.hits) AS h,
+     
      UNNEST(h.product) AS p
+     
 WHERE totals.transactions >= 1
+
   AND p.productRevenue IS NOT NULL
+  
 GROUP BY year, month
+
 ORDER BY year, month;
+
 ### Project Results:
 | Row | Year | Month | Total Revenue |
 | --- | --- | --- | --- |
@@ -454,29 +510,51 @@ Order results by revenue in descending order
 WITH rev AS (
   SELECT
     t.device.deviceCategory AS device,
+    
     SUM(p.productRevenue) / 1000000 AS revenue_by_device
+    
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+  
        UNNEST(t.hits) AS h,
+       
        UNNEST(h.product) AS p
+       
   WHERE totals.transactions IS NOT NULL
+  
     AND p.productRevenue IS NOT NULL
+    
   GROUP BY device
+  
 ),
 total AS (
+
   SELECT SUM(p.productRevenue) / 1000000 AS total_revenue
+  
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+  
        UNNEST(t.hits) AS h,
+       
        UNNEST(h.product) AS p
+       
   WHERE totals.transactions IS NOT NULL
+  
     AND p.productRevenue IS NOT NULL
+    
 )
 SELECT
+
   r.device,
+  
   r.revenue_by_device,
+  
   t.total_revenue,
+  
   ROUND(r.revenue_by_device / t.total_revenue * 100, 2) AS ratio
+  
 FROM rev r CROSS JOIN total t
+
 ORDER BY ratio DESC;
+
 
 ### Project Results:
 | Row | Device | Total Revenue | Ratio (%) |
@@ -503,30 +581,53 @@ Compute ratio of each device’s revenue contribution relative to total revenue.
 Order results by ratio and revenue in descending order to highlight the dominant device.
 ## 💻 Query / Code
 WITH List_buyer AS (
+
   SELECT DISTINCT fullVisitorId
+  
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+  
        UNNEST(hits) AS hits,
+       
        UNNEST(hits.product) AS product
+       
   WHERE product.productRevenue IS NOT NULL
+  
     AND totals.transactions >= 1
+    
     AND _table_suffix BETWEEN '20170701' AND '20170731'
+    
     AND product.v2ProductName = "YouTube Men's Vintage Henley"
+    
 )
 
 SELECT
+
   product.v2ProductName AS other_purchased_products,
+  
   SUM(product.productQuantity) AS quantity
+  
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` t,
+
      UNNEST(hits) AS hits,
+     
      UNNEST(hits.product) AS product
+     
 JOIN List_buyer l
+
   ON t.fullVisitorId = l.fullVisitorId
+  
 WHERE product.productRevenue IS NOT NULL
+
   AND totals.transactions >= 1
+  
   AND _table_suffix BETWEEN '20170701' AND '20170731'
+  
   AND product.v2ProductName <> "YouTube Men's Vintage Henley"
+  
 GROUP BY other_purchased_products
+
 ORDER BY quantity DESC;
+
 
 
 ### Project Results:
@@ -610,48 +711,91 @@ add_to_cart_rate = (num_addtocart ÷ num_product_view) × 100
 purchase_rate = (num_purchase ÷ num_product_view) × 100
 ## 💻 Query / Code
 WITH base AS (
+
   SELECT
+  
     FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', t.date)) AS month,
+    
     h.eCommerceAction.action_type AS action_type,
+    
     p.productRevenue
+    
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+  
        UNNEST(t.hits) AS h,
+       
        UNNEST(h.product) AS p
+       
   WHERE _TABLE_SUFFIX BETWEEN '20170101' AND '20170331'
+  
     AND h.eCommerceAction.action_type IS NOT NULL
+    
 ),
+
 views AS (
+
   SELECT
+  
     month,
+    
     COUNTIF(action_type = '2') AS num_product_view
+    
   FROM base
+  
   GROUP BY month
+  
 ),
+
 adds AS (
+
   SELECT
+  
     month,
+    
     COUNTIF(action_type = '3') AS num_addtocart
+    
   FROM base
+  
   GROUP BY month
+  
 ),
+
 purchases AS (
+
   SELECT
+  
     month,
+    
     COUNTIF(action_type = '6' AND productRevenue IS NOT NULL) AS num_purchase
+    
   FROM base
+  
   GROUP BY month
+  
 )
+
 SELECT
+
   v.month,
+  
   v.num_product_view,
+  
   a.num_addtocart,
+  
   p.num_purchase,
+  
   ROUND(a.num_addtocart / v.num_product_view * 100, 2) AS add_to_cart_rate,
+  
   ROUND(p.num_purchase / v.num_product_view * 100, 2) AS purchase_rate
+  
 FROM views v
+
 JOIN adds a USING(month)
+
 JOIN purchases p USING(month)
+
 ORDER BY v.month;
+
 
 ### Project Results:
 | Row | Month | Product Views | Add to Cart | Purchases | Add to Cart Rate (%) | Purchase Rate (%) |
@@ -686,17 +830,29 @@ Apply SUM(...) OVER (ORDER BY week) window function.
 Order results by week to show progression.
 ## 💻 Query / Code
 WITH base AS (
+
   SELECT
+  
     PARSE_DATE('%Y%m%d', t.date) AS date,
+    
     p.productRevenue as product
+    
   FROM
+  
     `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
+    
     UNNEST(t.hits) AS h,
+    
     UNNEST(h.product) AS p
+    
   WHERE
+  
     _TABLE_SUFFIX BETWEEN '20170501' AND '20170731'
+    
     AND h.eCommerceAction.action_type = '6'
+    
     AND product IS NOT NULL
+    
 
 ### Project Results:
 | Row | Week | Weekly Revenue | Cumulative Revenue |
