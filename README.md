@@ -1,15 +1,15 @@
 
 # 📊 Analyze E‑commerce Performance of Google Merchandise Store | SQL + BigQuery 
 
-_The core problem this project addresses → Evaluating store performance and customer behavior.
+- The core problem this project addresses → Evaluating store performance and customer behavior.
 
-_Which products generate the highest revenue?
+- Which products generate the highest revenue?
 
-_How do categories, countries, traffic sources, and devices contribute to sales?
+- How do categories, countries, traffic sources, and devices contribute to sales?
 
-_What are the conversion rates from product views → add to cart → purchase?
+- What are the conversion rates from product views → add to cart → purchase?
 
-_How does revenue trend over time (monthly, weekly, cumulative)?
+- How does revenue trend over time (monthly, weekly, cumulative)?
   
 Author: [Trần Quốc Hưng]  
 Date: 2025/12/25 
