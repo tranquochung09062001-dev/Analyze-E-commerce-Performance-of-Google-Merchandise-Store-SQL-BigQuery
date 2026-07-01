@@ -114,6 +114,7 @@ Aggregate revenue by product name.
 
 Order descending and limit to top 10.
 ## 💻 Query / Code
+<pre>
 SELECT
   p.v2ProductName AS product_name, 
   
@@ -130,7 +131,7 @@ WHERE p.productRevenue IS NOT NULL
 GROUP BY product_name
 
 ORDER BY total_revenue DESC;
-
+</pre>
 ### Project Results:
 | Row | Product Name | Total Revenue |
 | --- | --- | --- |
@@ -159,6 +160,7 @@ Filter only sessions with transactions (totals.transactions >= 1).
 
 Order results by revenue in descending order.
 ## 💻 Query / Code
+<pre>
 SELECT
   p.v2ProductCategory AS product_category,
   
@@ -177,7 +179,7 @@ WHERE totals.transactions >= 1
 GROUP BY product_category
 
 ORDER BY total_revenue DESC;
-
+</pre>
 
 ### Project Results:
 | Row | Product Category | Total Revenue |
@@ -217,6 +219,7 @@ Filter only sessions with transactions (totals.transactions >= 1).
 
 Order results by revenue in descending order
 ## 💻 Query / Code
+<pre>
 SELECT
   t.geoNetwork.country AS country,
   
@@ -236,7 +239,7 @@ WHERE totals.transactions >= 1
 GROUP BY country
 
 ORDER BY total_revenue DESC;
-
+</pre>
 
 ### Project Results:
 | Row | Country | Total Revenue |
@@ -305,6 +308,7 @@ Filter only sessions with transactions (totals.transactions >= 1).
 
 Order results by revenue in descending order
 ## 💻 Query / Code
+<pre>
 SELECT
   t.trafficSource.medium AS traffic_medium,
   
@@ -324,7 +328,7 @@ GROUP BY traffic_medium
 
 ORDER BY total_revenue DESC;
 
-select *  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+</pre>
 
 ### Project Results:
 | Row | Traffic Medium | Total Revenue |
@@ -337,7 +341,7 @@ select *  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
 | 6 | affiliate | 638.10 |
 | 7 | (not set) | 11.99 |
 
-## Task 5  :Top pổducts had been sold by quantity(No limit)
+## Task 5  :Top products had been sold by quantity(No limit)
 🎯 Objective
 Identify which products are sold in the highest quantities to understand customer preferences and guide inventory planning.
 
@@ -358,6 +362,7 @@ Filter only sessions with transactions (totals.transactions >= 1).
 
 Order results by revenue in descending order
 ## 💻 Query / Code
+<pre>
 SELECT
   p.v2ProductName AS product_name,
   
@@ -374,7 +379,7 @@ WHERE  p.productRevenue IS NOT NULL
 GROUP BY product_name
 
 ORDER BY total_quantity DESC;
-
+</pre>
 ### Project Results:
 | Row | Product Name | Total Revenue |
 | --- | --- | --- |
@@ -450,6 +455,7 @@ Filter only sessions with transactions (totals.transactions >= 1).
 
 Order results by revenue in descending order
 ## 💻 Query / Code
+<pre>
 SELECT
   EXTRACT(YEAR FROM PARSE_DATE('%Y%m%d', t.date)) AS year,
   
@@ -470,7 +476,7 @@ WHERE totals.transactions >= 1
 GROUP BY year, month
 
 ORDER BY year, month;
-
+</pre>
 ### Project Results:
 | Row | Year | Month | Total Revenue |
 | --- | --- | --- | --- |
@@ -507,10 +513,7 @@ Order results by ratio in descending order to highlight the dominant device.
 
 Order results by revenue in descending order
 ## 💻 Query / Code
-WITH rev AS (
-  SELECT
-    t.device.deviceCategory AS device,
-    
+<pre>
     SUM(p.productRevenue) / 1000000 AS revenue_by_device
     
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS t,
@@ -554,7 +557,7 @@ SELECT
 FROM rev r CROSS JOIN total t
 
 ORDER BY ratio DESC;
-
+</pre>
 
 ### Project Results:
 | Row | Device | Total Revenue | Ratio (%) |
@@ -580,6 +583,7 @@ Compute ratio of each device’s revenue contribution relative to total revenue.
 
 Order results by ratio and revenue in descending order to highlight the dominant device.
 ## 💻 Query / Code
+<pre>
 WITH List_buyer AS (
 
   SELECT DISTINCT fullVisitorId
@@ -627,7 +631,7 @@ WHERE product.productRevenue IS NOT NULL
 GROUP BY other_purchased_products
 
 ORDER BY quantity DESC;
-
+</pre>
 
 
 ### Project Results:
@@ -710,6 +714,7 @@ add_to_cart_rate = (num_addtocart ÷ num_product_view) × 100
 
 purchase_rate = (num_purchase ÷ num_product_view) × 100
 ## 💻 Query / Code
+<pre>
 WITH base AS (
 
   SELECT
@@ -796,7 +801,7 @@ JOIN purchases p USING(month)
 
 ORDER BY v.month;
 
-
+</pre>
 ### Project Results:
 | Row | Month | Product Views | Add to Cart | Purchases | Add to Cart Rate (%) | Purchase Rate (%) |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -829,6 +834,7 @@ Apply SUM(...) OVER (ORDER BY week) window function.
 
 Order results by week to show progression.
 ## 💻 Query / Code
+<pre>
 WITH base AS (
 
   SELECT
@@ -852,8 +858,7 @@ WITH base AS (
     AND h.eCommerceAction.action_type = '6'
     
     AND product IS NOT NULL
-    
-
+    </pre>
 ### Project Results:
 | Row | Week | Weekly Revenue | Cumulative Revenue |
 | --- | --- | --- | --- |
