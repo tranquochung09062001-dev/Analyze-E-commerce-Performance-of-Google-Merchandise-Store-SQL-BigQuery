@@ -878,12 +878,18 @@ WITH base AS (
 | 14 | 201731 | 11,836.39 | 425,257.70 |
 
 📍 Key Insights
+
 ✔️Apparel is the top revenue driver – clothing products generate the majority of income, making this the most critical category to invest in.
+
 
 ✔️The U.S. market dominates – it contributes the largest share of revenue, so marketing and distribution efforts should be heavily focused here.
 
+
 ✔️Office products lead in sales volume but rank third in revenue – this indicates strong demand but lower order value, suggesting opportunities to increase margins through bundling or upselling.
+
 
 ✔️Desktop devices generate the highest revenue – desktop remains the primary platform for conversions, while mobile presents untapped growth potential.
 
+
 ✔️Seasonal peaks boost revenue significantly – certain weeks/months show sharp increases, highlighting the importance of aligning campaigns and inventory with these demand cycles.
+
